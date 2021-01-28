@@ -3,6 +3,7 @@ package no.ntnu.espegu.sprites;
 import com.badlogic.gdx.Gdx;
 
 import no.ntnu.espegu.CurrentDirectionX;
+import no.ntnu.espegu.CurrentDirectionY;
 
 public class AiController extends Controller {
 
@@ -14,18 +15,27 @@ public class AiController extends Controller {
 
     @Override
     public void update(Sprite... siblings) {
-        if(currentDirection == CurrentDirectionX.RIGHT) {
-            setX(x + 60);
-            if(x >= Gdx.graphics.getWidth() - 300) {
-                currentDirection = CurrentDirectionX.LEFT;
+        Ball ball = null;
+
+        for (Sprite sibling : siblings) {
+            if (sibling instanceof Ball) {
+                ball = (Ball) sibling;
+                break;
             }
         }
 
-        if(currentDirection == CurrentDirectionX.LEFT) {
-            setX(x - 60);
-            if(x == 0) {
-                currentDirection = CurrentDirectionX.RIGHT;
-            }
+        if(ball == null) {
+            return;
+        }
+
+        if(ball.getCurrentDirectionY() == CurrentDirectionY.DOWN) {
+            return;
+        }
+
+        if(ball.getX() > getX()) {
+            setX(x + 25);
+        } else if (ball.getX() < getX()) {
+            setX(x - 25);
         }
     }
 }

@@ -115,22 +115,6 @@ public class Ball extends Sprite {
         }
     }
 
-    public boolean isGameFinished() {
-        return isGameFinished;
-    }
-
-    public String getWinner() {
-        return winner;
-    }
-
-    public int getWinsAi() {
-        return winsAi;
-    }
-
-    public int getWinsPlayer() {
-        return winsPlayer;
-    }
-
     public void restart() {
         winner = null;
         isGameFinished = false;
@@ -147,4 +131,27 @@ public class Ball extends Sprite {
         currentDirectionY = random.nextInt(2) >= 1 ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
     }
 
+    public boolean isGameFinished() {
+        return isGameFinished;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public int getWinsAi() {
+        return winsAi;
+    }
+
+    public int getWinsPlayer() {
+        return winsPlayer;
+    }
+
+    public CurrentDirectionX getCurrentDirectionX() {
+        return currentDirectionX;
+    }
+
+    public CurrentDirectionY getCurrentDirectionY() {
+        return currentDirectionY;
+    }
 }

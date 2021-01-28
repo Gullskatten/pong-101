@@ -104,7 +104,7 @@ public class PongGame extends ApplicationAdapter {
             ai.render(batch, elapsedTime);
             ball.render(batch, elapsedTime);
             ball.update(player, ai);
-            ai.update();
+            ai.update(ball);
             winsPlayerText.draw(batch, ball.getWinsPlayer() + "", 50, 75);
             winsAiText.draw(batch, ball.getWinsAi() + "", 50, Math.round(Gdx.graphics.getHeight() - 75));
         }
