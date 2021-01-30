@@ -1,6 +1,14 @@
 # Pong-game 🏓
 A very simple libgdx-project used for an assignment in Software Architecture.
 
+### Running the desktop version
+Clone the repository and run the following command in the root directory of the project (requires Java 8 installed).
+
+```shell
+ java -jar pong-desktop.jar
+```
+
+
 ### Task
 Implement your own version of the classic game of pong.
 
