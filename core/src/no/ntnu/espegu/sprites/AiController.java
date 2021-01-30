@@ -1,13 +1,8 @@
 package no.ntnu.espegu.sprites;
 
-import com.badlogic.gdx.Gdx;
-
-import no.ntnu.espegu.CurrentDirectionX;
 import no.ntnu.espegu.CurrentDirectionY;
 
 public class AiController extends Controller {
-
-    private CurrentDirectionX currentDirection = CurrentDirectionX.RIGHT;
 
     public AiController(float x, float y) {
         super(x, y);
@@ -24,15 +19,15 @@ public class AiController extends Controller {
             }
         }
 
-        if(ball == null) {
+        if (ball == null) {
             return;
         }
 
-        if(ball.getCurrentDirectionY() == CurrentDirectionY.DOWN) {
+        if (ball.getCurrentDirectionY() == CurrentDirectionY.DOWN) {
             return;
         }
 
-        if(ball.getX() > getX()) {
+        if (ball.getX() > getX()) {
             setX(x + 25);
         } else if (ball.getX() < getX()) {
             setX(x - 25);

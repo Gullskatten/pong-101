@@ -9,7 +9,7 @@ import no.ntnu.espegu.CurrentDirectionX;
 import no.ntnu.espegu.CurrentDirectionY;
 
 public class Ball extends Sprite {
-    private final float DEFAULT_SPEED = 7f;
+    private final float DEFAULT_SPEED = 9f;
     private static final int DEFAULT_HEIGHT = 30;
     private static final int DEFAULT_WIDTH = 30;
     private static final int WIN_POINTS_REQUIRED = 1;
