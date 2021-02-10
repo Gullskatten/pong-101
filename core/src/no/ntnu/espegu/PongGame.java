@@ -19,6 +19,7 @@ import no.ntnu.espegu.sprites.Ball;
 import no.ntnu.espegu.sprites.DraggableController;
 
 public class PongGame extends ApplicationAdapter {
+
     private SpriteBatch batch;
     private DraggableController player;
     private AiController ai;
@@ -73,7 +74,7 @@ public class PongGame extends ApplicationAdapter {
         button.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-               ball.restart();
+               GameState.getInstance().restartGame();
             }
         });
     }
@@ -87,14 +88,14 @@ public class PongGame extends ApplicationAdapter {
         winsPlayerText.setColor(Color.GRAY);
         winsAiText.setColor(Color.YELLOW);
 
-        if (ball.isGameFinished()) {
+        if (GameState.getInstance().isGameFinished()) {
             if(!button.isVisible()) {
                 button.setVisible(true);
             }
             winnerText.getData().setScale(2f);
-            winnerText.draw(batch, ball.getWinner() + " WON!", Math.round(Gdx.graphics.getWidth() / 2f - 180), Math.round(Gdx.graphics.getHeight() / 2f));
+            winnerText.draw(batch, GameState.getInstance().getWinner() + " WON!", Math.round(Gdx.graphics.getWidth() / 2f - 180), Math.round(Gdx.graphics.getHeight() / 2f));
             winsAiText.setColor(Color.GRAY);
-            winsAiText.draw(batch, ball.getWinsPlayer() + " (PLAYER)" + " - " + ball.getWinsAi() + " (AI)", 50, Math.round(Gdx.graphics.getHeight() - 75));
+            winsAiText.draw(batch, GameState.getInstance().getWinsPlayer() + " (PLAYER)" + " - " + GameState.getInstance().getWinsAi() + " (AI)", 50, Math.round(Gdx.graphics.getHeight() - 75));
             stage.draw();
         } else {
             if(button.isVisible()) {
@@ -105,8 +106,8 @@ public class PongGame extends ApplicationAdapter {
             ball.render(batch, elapsedTime);
             ball.update(player, ai);
             ai.update(ball);
-            winsPlayerText.draw(batch, ball.getWinsPlayer() + "", 50, 75);
-            winsAiText.draw(batch, ball.getWinsAi() + "", 50, Math.round(Gdx.graphics.getHeight() - 75));
+            winsPlayerText.draw(batch, GameState.getInstance().getWinsPlayer() + "", 50, 75);
+            winsAiText.draw(batch, GameState.getInstance().getWinsAi() + "", 50, Math.round(Gdx.graphics.getHeight() - 75));
         }
 
         batch.end();

@@ -7,21 +7,18 @@ import java.util.Random;
 
 import no.ntnu.espegu.CurrentDirectionX;
 import no.ntnu.espegu.CurrentDirectionY;
+import no.ntnu.espegu.GameState;
 
 public class Ball extends Sprite {
+
     private final float DEFAULT_SPEED = 9f;
     private static final int DEFAULT_HEIGHT = 30;
     private static final int DEFAULT_WIDTH = 30;
-    private static final int WIN_POINTS_REQUIRED = 1;
     private float speed = DEFAULT_SPEED;
     private final float xMax;
     private final float yMax;
     private CurrentDirectionY currentDirectionY;
     private CurrentDirectionX currentDirectionX;
-    private int winsPlayer = 0;
-    private int winsAi = 0;
-    private boolean isGameFinished = false;
-    private String winner = "";
 
     public Ball(float xMax, float yMax, float x, float y) {
         super(x, y, DEFAULT_HEIGHT, DEFAULT_WIDTH, "ball.png");
@@ -90,36 +87,21 @@ public class Ball extends Sprite {
         switch (currentDirectionY) {
             case DOWN:
                 if (y <= -10) {
-                    winsAi++;
+                    GameState.getInstance().incrementWinsAi();
                     softReset();
-                    if(winsAi == WIN_POINTS_REQUIRED) {
-                        winner = "AI";
-                        isGameFinished = true;
-                    }
                 } else {
                     y -= speed;
                 }
                 break;
             case UP:
                 if (y >= yMax + 10) {
-                    winsPlayer++;
+                    GameState.getInstance().incrementWinsPlayer();
                     softReset();
-                    if(winsPlayer == WIN_POINTS_REQUIRED) {
-                        winner = "PLAYER";
-                        isGameFinished = true;
-                    }
                 } else {
                     y += speed;
                 }
                 break;
         }
-    }
-
-    public void restart() {
-        winner = null;
-        isGameFinished = false;
-        winsAi = 0;
-        winsPlayer = 0;
     }
 
     public void softReset() {
@@ -129,22 +111,6 @@ public class Ball extends Sprite {
         Random random = new Random();
         currentDirectionX = random.nextInt(2) >= 1 ? CurrentDirectionX.RIGHT : CurrentDirectionX.LEFT;
         currentDirectionY = random.nextInt(2) >= 1 ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
-    }
-
-    public boolean isGameFinished() {
-        return isGameFinished;
-    }
-
-    public String getWinner() {
-        return winner;
-    }
-
-    public int getWinsAi() {
-        return winsAi;
-    }
-
-    public int getWinsPlayer() {
-        return winsPlayer;
     }
 
     public CurrentDirectionX getCurrentDirectionX() {
