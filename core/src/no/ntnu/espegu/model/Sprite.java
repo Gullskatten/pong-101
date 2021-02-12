@@ -1,8 +1,7 @@
-package no.ntnu.espegu.sprites;
+package no.ntnu.espegu.model;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sun.org.apache.xpath.internal.objects.XString;
 
 import java.util.UUID;
 
@@ -28,9 +27,7 @@ public abstract class Sprite {
         uuid = UUID.randomUUID();
     }
 
-    public abstract void update(Sprite... siblings);
-
-    public abstract void render(SpriteBatch batch, float elapsedTime);
+    public abstract void render(SpriteBatch batch);
 
     public float getY() {
         return y;
@@ -68,4 +65,5 @@ public abstract class Sprite {
     public void setWidth(int width) {
         this.width = width;
     }
+
 }

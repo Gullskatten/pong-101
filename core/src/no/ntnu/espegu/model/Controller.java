@@ -1,6 +1,5 @@
-package no.ntnu.espegu.sprites;
+package no.ntnu.espegu.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Controller extends Sprite {
@@ -13,11 +12,7 @@ public class Controller extends Sprite {
     }
 
     @Override
-    public void update(Sprite... siblings) {
-    }
-
-    @Override
-    public void render(SpriteBatch batch, float elapsedTime) {
+    public void render(SpriteBatch batch) {
         batch.draw(
                 texture.getTexture(),
                 x,

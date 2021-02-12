@@ -1,9 +1,8 @@
-package no.ntnu.espegu.sprites;
+package no.ntnu.espegu.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
-@AwardsPoints
 public class DraggableController extends Controller implements InputProcessor {
 
     public DraggableController(float x, float y) {

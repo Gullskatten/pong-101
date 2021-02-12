@@ -14,9 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import no.ntnu.espegu.sprites.AiController;
-import no.ntnu.espegu.sprites.Ball;
-import no.ntnu.espegu.sprites.DraggableController;
+import no.ntnu.espegu.model.AiController;
+import no.ntnu.espegu.model.Ball;
+import no.ntnu.espegu.model.DraggableController;
 
 public class PongGame extends ApplicationAdapter {
 
@@ -27,12 +27,8 @@ public class PongGame extends ApplicationAdapter {
     private BitmapFont winnerText;
     private BitmapFont winsAiText;
     private BitmapFont winsPlayerText;
-    Stage stage;
-    TextButton button;
-    TextButton.TextButtonStyle textButtonStyle;
-    Skin skin;
-    TextureAtlas buttonAtlas;
-    private float elapsedTime;
+    private Stage stage;
+    private TextButton restartGameButton;
 
     @Override
     public void create() {
@@ -42,9 +38,9 @@ public class PongGame extends ApplicationAdapter {
         player = new DraggableController(0, 0);
         ai = new AiController(0, yMax - 30);
         ball = new Ball(xMax, yMax, Math.round(yMax / 2), Math.round(xMax / 2));
-
         stage = new Stage();
 
+        // Allows multiple input processors to be registered
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
         inputMultiplexer.addProcessor(stage);
@@ -52,6 +48,10 @@ public class PongGame extends ApplicationAdapter {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+        createMenuTextures();
+    }
+
+    private void createMenuTextures() {
         BitmapFont defaultFontSet = new BitmapFont(Gdx.files.internal("arial-64.fnt"),
                 Gdx.files.internal("arial-64.png"), false);
 
@@ -59,22 +59,22 @@ public class PongGame extends ApplicationAdapter {
         winsPlayerText = defaultFontSet;
         winsAiText = defaultFontSet;
 
-        buttonAtlas = new TextureAtlas(Gdx.files.internal("button.atlas"));
-        skin = new Skin();
+        TextureAtlas buttonAtlas = new TextureAtlas(Gdx.files.internal("button.atlas"));
+        Skin skin = new Skin();
         skin.addRegions(buttonAtlas);
-        textButtonStyle = new TextButton.TextButtonStyle();
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = new BitmapFont(Gdx.files.internal("arial-32.fnt"),
                 Gdx.files.internal("arial-32.png"), false);
         textButtonStyle.font.getData().setScale(2f);
         textButtonStyle.up = skin.getDrawable("btn_texture");
         textButtonStyle.down = skin.getDrawable("btn_texture");
         textButtonStyle.checked = skin.getDrawable("btn_texture");
-        button = new TextButton("Restart game", textButtonStyle);
-        stage.addActor(button);
-        button.addListener(new ChangeListener() {
+        restartGameButton = new TextButton("Restart game", textButtonStyle);
+        stage.addActor(restartGameButton);
+        restartGameButton.addListener(new ChangeListener() {
             @Override
-            public void changed (ChangeEvent event, Actor actor) {
-               GameState.getInstance().restartGame();
+            public void changed(ChangeEvent event, Actor actor) {
+                GameState.getInstance().restartGame();
             }
         });
     }
@@ -82,35 +82,38 @@ public class PongGame extends ApplicationAdapter {
     @Override
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        elapsedTime += Gdx.graphics.getDeltaTime();
         batch.begin();
 
         winsPlayerText.setColor(Color.GRAY);
         winsAiText.setColor(Color.YELLOW);
 
         if (GameState.getInstance().isGameFinished()) {
-            if(!button.isVisible()) {
-                button.setVisible(true);
-            }
-            winnerText.getData().setScale(2f);
-            winnerText.draw(batch, GameState.getInstance().getWinner() + " WON!", Math.round(Gdx.graphics.getWidth() / 2f - 180), Math.round(Gdx.graphics.getHeight() / 2f));
-            winsAiText.setColor(Color.GRAY);
-            winsAiText.draw(batch, GameState.getInstance().getWinsPlayer() + " (PLAYER)" + " - " + GameState.getInstance().getWinsAi() + " (AI)", 50, Math.round(Gdx.graphics.getHeight() - 75));
-            stage.draw();
+           renderGameFinishedScreen();
         } else {
-            if(button.isVisible()) {
-                button.setVisible(false);
+            if (restartGameButton.isVisible()) {
+                restartGameButton.setVisible(false);
             }
-            player.render(batch, elapsedTime);
-            ai.render(batch, elapsedTime);
-            ball.render(batch, elapsedTime);
-            ball.update(player, ai);
-            ai.update(ball);
+            player.render(batch);
+            ai.render(batch);
+            ball.render(batch);
+            ball.checkForCollision(ai, player);
+
             winsPlayerText.draw(batch, GameState.getInstance().getWinsPlayer() + "", 50, 75);
             winsAiText.draw(batch, GameState.getInstance().getWinsAi() + "", 50, Math.round(Gdx.graphics.getHeight() - 75));
         }
 
         batch.end();
+    }
+
+    private void renderGameFinishedScreen() {
+        if (!restartGameButton.isVisible()) {
+            restartGameButton.setVisible(true);
+        }
+        winnerText.getData().setScale(2f);
+        winnerText.draw(batch, GameState.getInstance().getWinner() + " WON!", Math.round(Gdx.graphics.getWidth() / 2f - 180), Math.round(Gdx.graphics.getHeight() / 2f));
+        winsAiText.setColor(Color.GRAY);
+        winsAiText.draw(batch, GameState.getInstance().getWinsPlayer() + " (PLAYER)" + " - " + GameState.getInstance().getWinsAi() + " (AI)", 50, Math.round(Gdx.graphics.getHeight() - 75));
+        stage.draw();
     }
 
     @Override

@@ -1,13 +1,16 @@
-package no.ntnu.espegu.sprites;
+package no.ntnu.espegu.model;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
 
+import no.ntnu.espegu.Coordinate;
 import no.ntnu.espegu.CurrentDirectionX;
 import no.ntnu.espegu.CurrentDirectionY;
 import no.ntnu.espegu.GameState;
+import no.ntnu.espegu.observer.BallDirectionChangeObserver;
+import no.ntnu.espegu.observer.BallPositionChangeObserver;
 
 public class Ball extends Sprite {
 
@@ -27,28 +30,12 @@ public class Ball extends Sprite {
         Random random = new Random();
         currentDirectionX = random.nextInt(2) >= 1 ? CurrentDirectionX.RIGHT : CurrentDirectionX.LEFT;
         currentDirectionY = random.nextInt(2) >= 1 ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
+        BallDirectionChangeObserver.getInstance().notify(currentDirectionY);
     }
 
     @Override
-    public void update(Sprite... otherSpritesOnScreen) {
-        if (otherSpritesOnScreen != null && otherSpritesOnScreen.length > 0) {
-            Rectangle thisRect = new Rectangle(x, y, width, height);
-
-            for (Sprite sprite : otherSpritesOnScreen) {
-                if (sprite.uuid != this.uuid) {
-                    Rectangle otherRect = new Rectangle(sprite.x, sprite.y, sprite.width, sprite.height);
-                    if (thisRect.overlaps(otherRect)) {
-                        onHit();
-                        break;
-                    }
-                }
-            }
-        }
+    public void render(SpriteBatch batch) {
         changePosition();
-    }
-
-    @Override
-    public void render(SpriteBatch batch, float elapsedTime) {
         batch.draw(
                 texture.getTexture(),
                 x,
@@ -62,6 +49,7 @@ public class Ball extends Sprite {
     private void onHit() {
         currentDirectionY = currentDirectionY == CurrentDirectionY.UP ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
         speed += 2;
+        BallDirectionChangeObserver.getInstance().notify(currentDirectionY);
     }
 
     private void changePosition() {
@@ -102,6 +90,7 @@ public class Ball extends Sprite {
                 }
                 break;
         }
+        BallPositionChangeObserver.getInstance().notify(new Coordinate(x, y));
     }
 
     public void softReset() {
@@ -113,11 +102,13 @@ public class Ball extends Sprite {
         currentDirectionY = random.nextInt(2) >= 1 ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
     }
 
-    public CurrentDirectionX getCurrentDirectionX() {
-        return currentDirectionX;
-    }
-
-    public CurrentDirectionY getCurrentDirectionY() {
-        return currentDirectionY;
+    public void checkForCollision(Sprite... sprites) {
+        for(Sprite sprite : sprites) {
+            Rectangle rectOfSpriteWithUpdatedPosition = new Rectangle(sprite.x, sprite.y, sprite.width, sprite.height);
+            Rectangle thisRect = new Rectangle(x, y, width, height);
+            if (thisRect.overlaps(rectOfSpriteWithUpdatedPosition)) {
+                onHit();
+            }
+        }
     }
 }
