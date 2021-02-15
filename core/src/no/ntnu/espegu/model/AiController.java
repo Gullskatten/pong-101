@@ -9,7 +9,7 @@ import no.ntnu.espegu.observer.BallDirectionChangeObserver;
 import no.ntnu.espegu.observer.BallPositionChangeObserver;
 
 public class AiController extends Controller implements Observer {
-    boolean isInactive = false;
+    boolean isActive = true;
 
     public AiController(float x, float y) {
         super(x, y);
@@ -21,10 +21,10 @@ public class AiController extends Controller implements Observer {
     public void update(Observable o, Object arg) {
         if(o instanceof BallDirectionChangeObserver) {
             // If it's players turn, inactivate self
-           isInactive = arg == CurrentDirectionY.DOWN;
+            isActive = arg == CurrentDirectionY.UP;
         }
 
-        if(o instanceof BallPositionChangeObserver && !isInactive) {
+        if(o instanceof BallPositionChangeObserver && isActive) {
             Coordinate ballCoordinates = (Coordinate) arg;
             if (ballCoordinates.getX() > getX()) {
                 setX(x + 25);

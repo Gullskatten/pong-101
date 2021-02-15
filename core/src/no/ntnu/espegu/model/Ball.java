@@ -31,6 +31,7 @@ public class Ball extends Sprite {
         currentDirectionX = random.nextInt(2) >= 1 ? CurrentDirectionX.RIGHT : CurrentDirectionX.LEFT;
         currentDirectionY = random.nextInt(2) >= 1 ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
         BallDirectionChangeObserver.getInstance().notify(currentDirectionY);
+        BallPositionChangeObserver.getInstance().notify(new Coordinate(x, y));
     }
 
     @Override
@@ -100,6 +101,8 @@ public class Ball extends Sprite {
         Random random = new Random();
         currentDirectionX = random.nextInt(2) >= 1 ? CurrentDirectionX.RIGHT : CurrentDirectionX.LEFT;
         currentDirectionY = random.nextInt(2) >= 1 ? CurrentDirectionY.DOWN : CurrentDirectionY.UP;
+
+        BallDirectionChangeObserver.getInstance().notify(currentDirectionY);
     }
 
     public void checkForCollision(Sprite... sprites) {
